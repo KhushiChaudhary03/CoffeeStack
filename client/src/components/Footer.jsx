@@ -55,7 +55,7 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3 text-sm text-gray-300">
               <li>📧 coffeestack@gmail.com</li>
-              <li>📞 +91 98765 43210</li>
+              <li>📞 +91 9XXXXXXXXX</li>
               <li>📍 India</li>
             </ul>
           </div>

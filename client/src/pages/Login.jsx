@@ -4,42 +4,41 @@ import { useNavigate } from "react-router-dom";
 
 
 export default function Login() {
-  // ✅ State (ONLY at top level)
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
-  // ✅ Submit handler
+
+ 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  setError("");
 
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        setMessage("Login successful! ☕");
-        setIsError(false);
-        setTimeout(() => {
-          navigate("/menu");
-        }, 1200);
-      } else {
-        setMessage(data.message || "Invalid credentials");
-        setIsError(true);
-      }
-    } catch (error) {
-      setMessage("Server error. Please try again.");
-      setIsError(true);
+    if (!res.ok) {
+      setError(data.message); // ✅ show backend message
+      return;
     }
-  };
+
+    // login success
+    navigate("/");
+  } catch (err) {
+    setError("Something went wrong. Please try again.");
+  }
+};
+
 
   return (
     <div className="min-h-[calc(100vh-64px)] pt-16 bg-[#F5EFE6] flex items-center justify-center px-4">
@@ -53,7 +52,7 @@ export default function Login() {
           Login to continue your CoffeeStack journey
         </p>
 
-        {/* ✅ Website notification */}
+        
         {message && (
           <div
             className={`mb-4 text-center text-sm px-4 py-2 rounded-lg ${
@@ -67,6 +66,11 @@ export default function Login() {
         )}
 
         <form className="space-y-5" onSubmit={handleSubmit}>
+          {error && (
+    <div className="bg-red-100 text-red-700 px-4 py-2 rounded-md text-sm text-center">
+      {error}
+    </div>
+  )}
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
             <input

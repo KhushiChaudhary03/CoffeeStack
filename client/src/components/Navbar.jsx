@@ -20,6 +20,11 @@ export default function Navbar() {
           <Link to="/" className="hover:text-[#C8A97E]">Home</Link>
           <Link to="/menu" className="hover:text-[#C8A97E]">Menu</Link>
 
+          
+          <Link to="/orders" className="hover:text-[#C8A97E]">
+            Orders
+          </Link>
+
           {/* Cart with badge */}
           <Link to="/cart" className="relative hover:text-[#C8A97E]">
             Cart
@@ -30,7 +35,9 @@ export default function Navbar() {
             )}
           </Link>
 
-          <Link to="/login" className="hover:text-[#C8A97E]">Login</Link>
+          <Link to="/login" className="hover:text-[#C8A97E]">
+            Login
+          </Link>
         </div>
 
         {/* Mobile Hamburger */}
@@ -48,12 +55,20 @@ export default function Navbar() {
           <Link onClick={() => setOpen(false)} to="/" className="block">
             Home
           </Link>
+
           <Link onClick={() => setOpen(false)} to="/menu" className="block">
             Menu
           </Link>
+
+          
+          <Link onClick={() => setOpen(false)} to="/orders" className="block">
+            Orders
+          </Link>
+
           <Link onClick={() => setOpen(false)} to="/cart" className="block">
             Cart ({cartCount})
           </Link>
+
           <Link onClick={() => setOpen(false)} to="/login" className="block">
             Login
           </Link>
