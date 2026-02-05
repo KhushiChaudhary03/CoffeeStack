@@ -1,44 +1,40 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
-  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false);
-  const navigate = useNavigate();
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+  const { login } = useAuth(); // ✅ NEW
 
- 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+    e.preventDefault();
+    setError("");
 
-  try {
-    const res = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      setError(data.message); // ✅ show backend message
-      return;
+      if (!res.ok) {
+        setError(data.message);
+        return;
+      }
+
+      // ✅ USE CONTEXT INSTEAD OF localStorage
+      login(data.user, data.token);
+      navigate("/");
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
     }
-
-    // login success
-    navigate("/");
-  } catch (err) {
-    setError("Something went wrong. Please try again.");
-  }
-};
-
+  };
 
   return (
     <div className="min-h-[calc(100vh-64px)] pt-16 bg-[#F5EFE6] flex items-center justify-center px-4">
@@ -52,25 +48,14 @@ export default function Login() {
           Login to continue your CoffeeStack journey
         </p>
 
-        
-        {message && (
-          <div
-            className={`mb-4 text-center text-sm px-4 py-2 rounded-lg ${
-              isError
-                ? "bg-red-100 text-red-700"
-                : "bg-green-100 text-green-700"
-            }`}
-          >
-            {message}
-          </div>
-        )}
-
         <form className="space-y-5" onSubmit={handleSubmit}>
+
           {error && (
-    <div className="bg-red-100 text-red-700 px-4 py-2 rounded-md text-sm text-center">
-      {error}
-    </div>
-  )}
+            <div className="bg-red-100 text-red-700 px-4 py-2 rounded-md text-sm text-center">
+              {error}
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
             <input

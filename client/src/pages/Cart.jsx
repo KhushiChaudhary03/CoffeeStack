@@ -14,11 +14,19 @@ export default function Cart() {
   const navigate = useNavigate();
 
 const handleCheckout = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    navigate("/login");
+    return;
+  }
+
   try {
     const res = await fetch("http://localhost:5000/api/orders", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // 🔐 SEND TOKEN
       },
       body: JSON.stringify({
         items: cartItems,
@@ -30,6 +38,8 @@ const handleCheckout = async () => {
 
     if (res.ok) {
       navigate("/bill", { state: { orderId: data.orderId } });
+    } else {
+      alert(data.message);
     }
   } catch (error) {
     console.error(error);
