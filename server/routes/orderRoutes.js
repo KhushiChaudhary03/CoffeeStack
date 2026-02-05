@@ -1,20 +1,11 @@
 const express = require("express");
 const Order = require("../models/Order");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
-// GET ALL ORDERS
-router.get("/", async (req, res) => {
-  try {
-    const orders = await Order.find().sort({ createdAt: -1 });
-    res.status(200).json(orders);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch orders" });
-  }
-});
 
-
-// CREATE ORDER
-router.post("/", async (req, res) => {
+//  CREATE ORDER
+router.post("/", authMiddleware, async (req, res) => {
   try {
     const { items, totalAmount } = req.body;
 
@@ -23,6 +14,7 @@ router.post("/", async (req, res) => {
     }
 
     const newOrder = new Order({
+      user: req.user.id, 
       items,
       totalAmount,
     });
@@ -30,12 +22,25 @@ router.post("/", async (req, res) => {
     await newOrder.save();
 
     res.status(201).json({
-      message: "Order saved successfully",
+      message: "Order placed successfully",
       orderId: newOrder._id,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Order creation failed" });
+  }
+});
+
+// GET USER ORDERS
+router.get("/my-orders", authMiddleware, async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.user.id }).sort({
+      createdAt: -1,
+    });
+
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch orders" });
   }
 });
 

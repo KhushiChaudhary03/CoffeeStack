@@ -5,7 +5,7 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-// 🔹 REGISTER
+// REGISTER
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -17,19 +17,23 @@ router.post("/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
+    await User.create({
       name,
       email,
       password: hashedPassword,
+      // role defaults to "user"
     });
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({
+      message: "User registered successfully",
+    });
   } catch (error) {
-    res.status(500).json({ message: "Registration failed" });
+    res.status(500).json({
+      message: "Registration failed",
+    });
   }
 });
-
-// 🔹 LOGIN
+// LOGIN
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -44,17 +48,31 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Incorrect password" });
     }
 
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
     res.status(200).json({
       message: "Login successful",
+      token,
       user: {
         id: user._id,
+        name: user.name,
         email: user.email,
+        role: user.role,
       },
     });
+
   } catch (error) {
+    console.error("LOGIN ERROR:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 module.exports = router;
