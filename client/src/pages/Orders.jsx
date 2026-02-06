@@ -12,6 +12,7 @@ export default function Orders() {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem("token");
+      console.log("TOKEN SENT:", token);
 
       const res = await fetch("http://localhost:5000/api/orders/my-orders", {
         headers: {
@@ -36,7 +37,7 @@ export default function Orders() {
 
   return (
     <div className="min-h-screen bg-[#F5EFE6] px-6 md:px-20 py-20 text-[#2B1B14]">
-      <h1 className="text-3xl md:text-4xl font-bold text-center mb-12">
+      <h1 className="text-3xl md:text-4xl font-bold text-center mb-10">
         My Orders
       </h1>
 
@@ -57,43 +58,46 @@ export default function Orders() {
       {/* No Orders */}
       {!loading && orders.length === 0 && !error && (
         <p className="text-center text-gray-600">
-          You have not placed any orders yet.
+          You haven’t placed any orders yet ☕
         </p>
       )}
 
       {/* Orders List */}
-      <div className="space-y-8 max-w-4xl mx-auto">
-        {orders.map((order) => (
+      <div className="max-w-4xl mx-auto space-y-8">
+        {orders.map((order, index) => (
           <div
             key={order._id}
-            className="bg-white rounded-2xl shadow-lg p-6"
+            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition"
           >
             {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between mb-4 gap-2">
-              <p className="font-semibold">
-                Order ID:
-                <span className="font-normal ml-2 text-gray-600">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+              <div>
+                <p className="text-sm text-gray-500">
+                  Order #{index + 1}
+                </p>
+                <p className="text-sm font-medium text-gray-700 break-all">
                   {order._id}
-                </span>
-              </p>
+                </p>
+              </div>
 
-              <p className="text-sm text-gray-500">
-                {new Date(order.createdAt).toLocaleDateString()}{" "}
-                {new Date(order.createdAt).toLocaleTimeString()}
-              </p>
+              <span className="text-xs bg-[#F5EFE6] px-3 py-1 rounded-full mt-2 sm:mt-0">
+                {new Date(order.createdAt).toLocaleDateString()}
+              </span>
             </div>
 
             {/* Items */}
-            <div className="border-t border-b py-4 space-y-2">
-              {order.items.map((item, index) => (
+            <div className="border rounded-lg p-4 space-y-3 mb-4">
+              {order.items.map((item, i) => (
                 <div
-                  key={index}
-                  className="flex justify-between text-sm"
+                  key={i}
+                  className="flex justify-between items-center text-sm"
                 >
-                  <span>
-                    {item.name} × {item.quantity}
+                  <span className="font-medium">
+                    {item.name}
+                    <span className="text-gray-500"> × {item.quantity}</span>
                   </span>
-                  <span>
+
+                  <span className="font-semibold">
                     ₹{item.price * item.quantity}
                   </span>
                 </div>
@@ -101,9 +105,11 @@ export default function Orders() {
             </div>
 
             {/* Total */}
-            <div className="flex justify-between mt-4 font-bold text-lg">
-              <span>Total</span>
-              <span>₹{order.totalAmount}</span>
+            <div className="flex justify-between items-center text-lg font-bold">
+              <span>Total Paid</span>
+              <span className="text-[#3E2723]">
+                ₹{order.totalAmount}
+              </span>
             </div>
           </div>
         ))}

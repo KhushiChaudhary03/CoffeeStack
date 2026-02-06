@@ -15,7 +15,7 @@ export default function Cart() {
 
 const handleCheckout = async () => {
   const token = localStorage.getItem("token");
-
+  console.log("TOKEN SENT:", token);
   if (!token) {
     navigate("/login");
     return;
@@ -26,7 +26,7 @@ const handleCheckout = async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // 🔐 SEND TOKEN
+        Authorization: `Bearer ${token}`, //  SEND TOKEN
       },
       body: JSON.stringify({
         items: cartItems,

@@ -117,9 +117,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =========================
-          FEATURED PICKS
-         ========================= */}
       <section className="px-8 md:px-20 py-20 bg-[#1b120e] reveal">
         <h2 className="text-3xl font-bold text-center mb-12">
           Most Loved Coffees
@@ -143,9 +140,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =========================
-          TESTIMONIAL
-         ========================= */}
+     
       <section className="px-8 md:px-20 py-20 bg-[#F5EFE6] text-[#2B1B14] reveal">
         <div className="max-w-4xl mx-auto text-center">
           <p className="italic text-lg mb-4">
@@ -156,9 +151,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =========================
-          FINAL CTA
-         ========================= */}
+      
       <section className="bg-[#2B1B14] px-8 md:px-20 py-20 text-center reveal">
         <h2 className="text-3xl font-bold mb-6">
           Ready for Your Next Coffee?

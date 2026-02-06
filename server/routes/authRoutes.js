@@ -5,35 +5,52 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-// REGISTER
+const ADMIN_EMAIL = "admin@coffeestack.com";
+
+/* =========================
+   REGISTER
+========================= */
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    //  Auto-assign role
+    const role = email === ADMIN_EMAIL ? "admin" : "user";
+
+    // Create user
     await User.create({
       name,
       email,
       password: hashedPassword,
-      // role defaults to "user"
+      role,
     });
 
     res.status(201).json({
-      message: "User registered successfully",
+      message: role === "admin"
+        ? "Admin registered successfully"
+        : "User registered successfully",
     });
+
   } catch (error) {
+    console.error("REGISTER ERROR:", error);
     res.status(500).json({
       message: "Registration failed",
     });
   }
 });
-// LOGIN
+
+/* =========================
+   LOGIN
+========================= */
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -48,6 +65,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Incorrect password" });
     }
 
+    // JWT with role
     const token = jwt.sign(
       {
         id: user._id,
@@ -56,6 +74,7 @@ router.post("/login", async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
+
     res.status(200).json({
       message: "Login successful",
       token,
@@ -72,7 +91,5 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-
 
 module.exports = router;
