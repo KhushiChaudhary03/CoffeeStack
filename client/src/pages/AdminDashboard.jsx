@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+const API = import.meta.env.VITE_API_URL;
 
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
@@ -22,9 +23,9 @@ export default function AdminDashboard() {
       };
 
       const [ordersRes, revenueRes, popularRes] = await Promise.all([
-        fetch("http://localhost:5000/api/admin/stats/orders", { headers }),
-        fetch("http://localhost:5000/api/admin/stats/revenue", { headers }),
-        fetch("http://localhost:5000/api/admin/stats/popular", { headers }),
+        fetch(`${API}/api/admin/stats/orders`, { headers }),
+      fetch(`${API}/api/admin/stats/revenue`, { headers }),
+      fetch(`${API}/api/admin/stats/popular`, { headers }),
       ]);
 
       if (!ordersRes.ok || !revenueRes.ok || !popularRes.ok) {

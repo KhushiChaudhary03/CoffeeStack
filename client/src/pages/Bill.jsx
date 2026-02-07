@@ -70,7 +70,7 @@ export default function Bill() {
         {/* Info */}
         <div className="bg-[#F5EFE6] rounded-lg p-4 text-sm text-gray-700 mb-8">
           ☕ Your coffee is being prepared fresh.  
-          You will receive it shortly. Enjoy!
+          You will receive it shortly. Enjoy:)
         </div>
 
         {/* Actions */}

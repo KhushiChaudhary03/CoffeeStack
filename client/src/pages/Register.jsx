@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+const API = import.meta.env.VITE_API_URL;
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -15,7 +16,7 @@ export default function Register() {
     setSuccess("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch(`${API}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -28,7 +29,7 @@ export default function Register() {
         return;
       }
 
-      setSuccess("Registration successful! Please login.");
+      setSuccess("Registration successful. Please login.");
 
      
       setName("");

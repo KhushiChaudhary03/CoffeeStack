@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 
+const API = import.meta.env.VITE_API_URL;
 
 export default function Cart() {
   const {
@@ -22,7 +23,7 @@ const handleCheckout = async () => {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/orders", {
+    const res = await fetch(`${API}/api/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
