@@ -10,7 +10,18 @@ const adminRoutes = require("./routes/adminRoutes");
 const app = express();
 
 /* Middleware */
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173", // local dev
+  "https://coffee-stack-ebon.vercel.app", // production 
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 /* Routes */

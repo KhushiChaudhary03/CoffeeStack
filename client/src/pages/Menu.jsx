@@ -28,7 +28,7 @@ export default function Menu() {
 
   const handleAddToCart = (coffee) => {
     if (!isLoggedIn) {
-      navigate("/login"); // 🔐 BLOCK GUESTS
+      navigate("/login"); 
       return;
     }
 
